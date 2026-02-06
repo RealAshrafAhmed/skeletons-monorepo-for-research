@@ -1,0 +1,7 @@
+[project]
+name = "pymc_extensions"
+dependencies = [
+    "numpy",
+    "arviz",
+    "pymc"
+]
