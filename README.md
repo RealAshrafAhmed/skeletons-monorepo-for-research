@@ -44,22 +44,6 @@ uv run pre-commit install
 uv run jupyter lab
 ```
 
-### Optional: Using mise
-
-If you have [mise](https://mise.jdx.dev/) installed:
-
-```bash
-# mise will auto-activate the right Python version
-mise install
-
-# Use mise tasks as shortcuts
-mise run sync      # uv sync --all-packages
-mise run fmt       # format code
-mise run lint      # lint code
-mise run test      # run tests
-mise run jupyter   # start jupyter lab
-```
-
 ## Common Commands
 
 ### Packages
@@ -278,7 +262,6 @@ Then run `uv sync --all-packages` to register it.
 ├── scripts/                # Utility scripts
 ├── pyproject.toml          # Root workspace config
 ├── .pre-commit-config.yaml # Pre-commit hooks
-├── .mise.toml              # mise configuration (optional)
 └── LICENSE                 # MIT License
 ```
 

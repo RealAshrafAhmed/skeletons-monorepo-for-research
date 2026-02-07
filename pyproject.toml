@@ -26,7 +26,8 @@ dependencies = [
     "graphviz>=0.21",
     "nutpie>=0.16.4",
     "papermill>=2.6.0",
-    "numba>=0.63.1"
+    "numba>=0.63.1",
+    "jupyter-ai>=2.31.7",
 ]
 
 [tool.uv.workspace]
@@ -41,6 +42,7 @@ dev = [
     "ipykernel>=7.1.0",
     "ipywidgets>=8.1.8",
     "jupyter>=1.1.1",
+    "jupyter-ai>=0.12.0",
     "nbclient>=0.10.2",
     "papermill>=2.6.0",
     "pre-commit>=4.0.0",
