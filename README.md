@@ -1,5 +1,37 @@
 # Skeletons Python Research Monorepo
 
+## Cheatsheet
+
+```bash
+# Install all dependencies (main + dev)
+uv sync --extra dev
+
+# Install only main dependencies
+uv sync
+
+# Start Jupyter Lab (with auto-kernel registration)
+./scripts/lab.sh
+
+# Or start Jupyter Lab directly
+uv run jupyter-lab
+
+# Format code
+uv run ruff format .
+
+# Lint code
+uv run ruff check .
+
+# Run tests
+uv run pytest
+
+# Set up pre-commit hooks (after installing dev dependencies)
+uv run pre-commit install
+```
+
+---
+
+# For those who want to read...
+
 A production-ready template for managing multiple research projects and shared libraries in a single repository using modern Python tooling.
 
 ## Why This Structure?
@@ -12,7 +44,7 @@ A production-ready template for managing multiple research projects and shared l
 - **🔬 Isolated Projects**: Each research project gets its own directory with dependencies, while sharing common code.
 - **📓 Notebook-Friendly**: Jupyter integration that actually works - imports from local packages seamlessly.
 - **🔄 Reproducibility**: Lockfile ensures everyone uses the same dependency versions. Pre-commit hooks enforce code quality.
-- **⚡ Fast Iteration**: `uv` makes dependency management 10-100x faster than pip/conda.
+- **⚡ Fast Iteration**: `uv` makes dependency management fast and ergonomic.
 - **🧪 Testing Ready**: Example test structure so you can validate critical code paths.
 
 **When to use this:**
@@ -34,57 +66,88 @@ A production-ready template for managing multiple research projects and shared l
 git clone <this-repo-url> my-research
 cd my-research
 
-# Install dependencies
-uv sync --all-packages
+# Install all dependencies (main + dev)
+uv sync --extra dev
 
 # Set up pre-commit hooks (optional but recommended)
 uv run pre-commit install
 
-# Start Jupyter
-uv run jupyter lab
+# Start Jupyter Lab (with auto-kernel registration)
+./scripts/lab.sh
 ```
 
+[// Dependency Structure]
+
+## Dependency Structure
+
+This project uses a structured approach to dependencies:
+
+- **Production dependencies**: Core packages required for running simulations, including `papermill` for programmatic notebook execution.
+- **Dev dependencies**: Development tools including Jupyter Lab, formatters, linters, test runners, and interactive notebook tools.
+
+To install different dependency sets:
+
+```bash
+# Install only main dependencies (production)
+uv sync
+
+# Install main + dev dependencies (development)
+uv sync --extra dev
+
+# Install all dependency groups
+uv sync --all-groups
+```
 ## Common Commands
 
 ### Packages
 
 ```bash
-# Install/sync all packages
-uv sync --all-packages
+# Sync workspace packages and dependencies
+uv sync --extra dev
 
 # Add a dependency to a specific package
-uv add numpy --package my_package
+cd packages/my_package && uv add numpy
 
 # Add a dev dependency to root
-uv add pytest --dev
+uv add --dev pytest
 
-# Reinstall a specific package (after changes)
-uv sync --all-packages --reinstall-package my_package
+# Add a main dependency to root
+uv add papermill
 
 # Force full reinstall (nuclear option)
-rm uv.lock && uv sync --all-packages
+rm uv.lock && uv sync --extra dev
 ```
 
 ### Jupyter
 
 ```bash
-# Start Jupyter Lab
-uv run jupyter lab
+# Start Jupyter Lab with automatic kernel registration (recommended)
+./scripts/lab.sh
 
-# Register kernel (if kernel issues)
+# Or start Jupyter Lab directly
+uv run jupyter-lab
+
+# Register kernel manually (if kernel issues)
 uv run python -m ipykernel install --user --name=skeletons-monorepo
+
+# Run notebooks programmatically (production)
+uv run papermill input.ipynb output.ipynb -p param_name param_value
 ```
 
-**Note:** Always restart the Jupyter kernel after installing/updating packages.
+**Note:** The `./scripts/lab.sh` script automatically registers the current environment as a Jupyter kernel before starting Jupyter Lab. Always restart the Jupyter kernel after installing/updating packages.
 
 ### Development
 
 ```bash
+
 # Format code
-uv run poe fmt
+uv run ruff format .
 
 # Lint code
-uv run poe lint
+uv run ruff check .
+
+# Run tests
+uv run pytest
 
 # TCustomizing the Template
 
@@ -103,7 +166,7 @@ rm -rf projects/slt-quasi-singular
 rm notebooks/example_usage.ipynb
 
 # Then sync to update workspace
-uv sync --all-packages
+uv sync --extra dev
 ```
 
 ### Customize for Your Research
@@ -119,6 +182,9 @@ uv sync --all-packages
    ```bash
    # These are available everywhere
    uv add torch transformers datasets
+
+   # Add dev/jupyter tools
+   uv add --dev jupyterlab ipykernel
    ```
 
 3. **Create your first shared package**:
@@ -160,15 +226,24 @@ uv sync --all-packages
 For Weights & Biases or MLflow:
 
 ```bash
-# Add to root dependencies (available everywhere)
+# Add to main dependencies (available everywhere)
 uv add wandb
 # or
 uv add mlflow
 
-# Then use in any notebook or project
+# Then sync
+uv sync --extra dev
 ```
 
 ### Adding GPU Dependencies
+
+```bash
+# Add PyTorch with CUDA support
+uv add torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Or add to pyproject.toml dependencies and sync
+uv sync --extra dev
+```
 
 ## Philosophy & Design Decisions
 
@@ -191,6 +266,12 @@ uv add mlflow
 - **packages/**: Reusable libraries (utils, plotting, data loaders) - should have tests
 - **projects/**: Specific experiments/papers - can be messier, more exploratory
 
+### Dependency Philosophy
+
+- **Main dependencies**: Only packages needed for production/simulation runs (notably `papermill` for programmatic notebook execution)
+- **Dev dependencies**: All interactive and development tools (Jupyter Lab, formatters, linters, etc.)
+- **Clean separation**: Keeps production environments lean while full dev environment has everything needed
+
 ### Alternatives Considered
 
 - **Separate repos per project**: Too much overhead, code duplication
@@ -205,97 +286,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow and guidelines.
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
-
----
-
-**I-url https://download.pytorch.org/whl/cu118
-
-# Or add to pyproject.toml with specific index
-```
-
-## ype check
-uv run poe check
-
-# Run tests
-uv run poe test
-
-# Run all checks
-uv run poe all
-```
-
-### Pre-commit Hooks
-
-Set up pre-commit hooks to automatically format and lint before committing:
-
-```bash
-# Install pre-commit hooks
-uv run pre-commit install
-
-# Run manually on all files
-uv run pre-commit run --all-files
-```
-
-### Creating New Packages
-
-```bash
-# Create a new library
-uv init packages/newlib --lib
-
-# Create a new project
-uv init projects/newproject --package
-```
-
-Then run `uv sync --all-packages` to register it.
-
-## Project Structure
-
-```
-├── packages/               # Shared libraries
-│   └── pymc_extensions/    # Example package
-│       ├── pyproject.toml
-│       ├── src/pymc_extensions/
-│       └── tests/          # Package tests
-├── projects/               # Research projects
-│   └── slt-quasi-singular/ # Example project
-├── notebooks/              # Shared notebooks
-├── data/                   # Research datasets
-├── scripts/                # Utility scripts
-├── pyproject.toml          # Root workspace config
-├── .pre-commit-config.yaml # Pre-commit hooks
-└── LICENSE                 # MIT License
-```
-
-## Troubleshooting
-
-### Import not working in notebook
-
-1. Restart the Jupyter kernel
-2. If still broken: `uv sync --all-packages --reinstall-package <package-name>`
-3. Check kernel is using correct venv:
-   ```python
-   import sys
-   print(sys.executable)  # Should be .venv/bin/python
-   ```
-
-### Package not found after adding
-
-Make sure it's in the workspace members in root `pyproject.toml`:
-
-```toml
-[tool.uv.workspace]
-members = [
-    "packages/*",
-    "projects/*"
-]
-```
-
-### Wrong Python version
-
-```bash
-uv python install 3.12
-uv sync --all-packages
-```
-
----
-
-**This skeleton is inspired by the structure and workflow in the `waterloo-slt-reading-group/zoo/python` monorepo.**

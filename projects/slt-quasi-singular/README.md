@@ -27,6 +27,12 @@ This project demonstrates generating and visualizing samples from a standard nor
    uv run papermill projects/slt-quasi-singular/normal_samples.ipynb projects/slt-quasi-singular/normal_samples_output.ipynb
    ```
 
+
+## Why Split into Multiple Notebooks?
+Splitting the workflow into separate notebooks allows for modular, reproducible analysis and enables the use of tools like **Papermill** to automate and parameterize long-running computations. This is especially useful for multi-hour simulations or when running on a cluster.
+
+**Tip:** You can run each notebook non-interactively with Papermill, chaining outputs as inputs for the next stage.
+
 ## Notes
 - All dependencies are managed with `uv`.
 - For troubleshooting, see the monorepo README.

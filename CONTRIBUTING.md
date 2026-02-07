@@ -5,7 +5,7 @@
 1. Clone the repository and navigate to it
 2. Install dependencies:
    ```bash
-   uv sync --all-packages
+   uv sync --extra dev
    ```
 3. Install pre-commit hooks:
    ```bash
@@ -19,11 +19,9 @@
 Pre-commit hooks will automatically run, but you can manually check:
 
 ```bash
-uv run poe fmt      # Format code
-uv run poe lint     # Lint code
-uv run poe check    # Type check
-uv run poe test     # Run tests
-uv run poe all      # Run all checks
+uv run ruff format .     # Format code
+uv run ruff check .      # Lint code
+uv run pytest           # Run tests
 ```
 
 ### Adding a New Package
@@ -33,7 +31,7 @@ uv run poe all      # Run all checks
 uv init packages/mypackage --lib
 
 # Sync to register it
-uv sync --all-packages
+uv sync --extra dev
 
 # Add dependencies to it
 uv add numpy --package mypackage
@@ -46,19 +44,19 @@ uv add numpy --package mypackage
 uv init projects/myproject --package
 
 # Sync to register it
-uv sync --all-packages
+uv sync --extra dev
 
 # Add local package dependencies
 cd projects/myproject
 # Edit pyproject.toml to add: dependencies = ["mypackage"]
-uv sync --all-packages
+uv sync --extra dev
 ```
 
 ### Writing Tests
 
 - Place tests in `tests/` directory within each package
 - Name files `test_*.py` or `*_test.py`
-- Run with `uv run poe test`
+- Run with `uv run pytest`
 
 ### Jupyter Notebooks
 

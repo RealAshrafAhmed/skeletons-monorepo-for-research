@@ -13,8 +13,7 @@
   },
 
   // Linting
-  "ruff.format.args": ["--config=${workspaceFolder}/pyproject.toml"],
-  "ruff.lint.args": ["--config=${workspaceFolder}/pyproject.toml"],
+  // ...existing code...
 
   // Type checking
   "python.analysis.typeCheckingMode": "basic",
@@ -56,5 +55,12 @@
     "charliermarsh.ruff",
     "ms-python.python",
     "ms-toolsai.jupyter"
+  ],
+  "python-envs.pythonProjects": [
+    {
+      "path": "",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
   ]
 }
