@@ -1,4 +1,17 @@
-# Skeletons Python Research Monorepo
+# Python Research Monorepo Template
+*A production-ready template for managing multiple research projects and shared libraries in a single repository using modern Python tooling.*
+
+## Why You Need This
+
+**Tired of research code chaos?** This template solves the problems every researcher faces:
+
+- 🔄 **Stop copying utility functions** between notebooks and projects
+- 🚫 **End "it works on my machine"** dependency conflicts
+- 🤝 **Share code with collaborators** without publishing to PyPI
+- 📚 **Keep notebooks clean** while building reusable libraries
+- ⚡ **Fast setup** - from clone to working in under 2 minutes
+
+Transform scattered research code into organized, professional projects that others can actually use.
 
 ## Cheatsheet
 
@@ -24,6 +37,9 @@ uv run ruff check .
 # Run tests
 uv run pytest
 
+# Clean workspace (removes 100s of cache files!)
+./scripts/cleanup.sh
+
 # Set up pre-commit hooks (after installing dev dependencies)
 uv run pre-commit install
 ```
@@ -31,8 +47,6 @@ uv run pre-commit install
 ---
 
 # For those who want to read...
-
-A production-ready template for managing multiple research projects and shared libraries in a single repository using modern Python tooling.
 
 ## Why This Structure?
 
@@ -132,18 +146,20 @@ rm uv.lock && uv sync --extra dev
 uv run jupyter-lab
 
 # Register kernel manually (if kernel issues)
-uv run python -m ipykernel install --user --name=skeletons-monorepo
+uv run python -m ipykernel install --user --name=research-monorepo
+
+# Trust notebooks (enables widgets like PyMC progress bars)
+uv run jupyter trust **/*.ipynb
 
 # Run notebooks programmatically (production)
 uv run papermill input.ipynb output.ipynb -p param_name param_value
 ```
 
-**Note:** The `./scripts/lab.sh` script automatically registers the current environment as a Jupyter kernel before starting Jupyter Lab. Always restart the Jupyter kernel after installing/updating packages or syncing workspace packages.
+**Note:** The `./scripts/lab.sh` script automatically registers the current environment as a Jupyter kernel and trusts notebooks (enabling widgets like PyMC progress bars) before starting Jupyter Lab. Always restart the Jupyter kernel after installing/updating packages or syncing workspace packages.
 
 ### Development
 
 ```bash
-
 # Format code
 uv run ruff format .
 
@@ -152,8 +168,28 @@ uv run ruff check .
 
 # Run tests
 uv run pytest
+```
 
-# TCustomizing the Template
+### Cleanup
+
+```bash
+# Full cleanup (checkpoints + Python cache + temp files) - Recommended!
+./scripts/cleanup.sh
+
+# Quick cleanup - just Jupyter checkpoints
+find . -name ".ipynb_checkpoints" -type d -exec rm -rf {} + 2>/dev/null || true
+
+# Clean Python cache only
+find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+
+# Clean all build artifacts
+uv run ruff clean  # (if using ruff cache)
+rm -rf build/ dist/ *.egg-info/ .pytest_cache/
+```
+
+**💡 Pro tip:** Run `./scripts/cleanup.sh` regularly to keep your workspace clean and fast. It can free up significant disk space!
+
+## Customizing the Template
 
 ### Remove Example Content
 
@@ -238,10 +274,37 @@ uv sync --extra dev
 # 3. If still failing, check package __init__.py files exist and export modules
 ```
 
+**Notebook widgets not working (progress bars, dropdowns):**
+```bash
+# 1. Trust the notebook (done automatically by setup.sh and lab.sh)
+uv run jupyter trust **/*.ipynb
+
+# 2. Restart Jupyter kernel: Kernel → Restart Kernel
+# 3. For PyMC progress bars, use progress_bar="autonotebook"
+```
+
 **Workspace packages not updating:**
 ```bash
 # Force rebuild of workspace packages
 uv sync --extra dev --reinstall
+```
+
+**Clean up Jupyter checkpoint clutter:**
+```bash
+# Quick cleanup script (removes checkpoints + Python cache + build artifacts)
+./scripts/cleanup.sh
+
+# Or manually remove just checkpoints
+find . -name ".ipynb_checkpoints" -type d -exec rm -rf {} + 2>/dev/null || true
+```
+
+**Workspace feels sluggish or taking too much space:**
+```bash
+# Full cleanup - removes all temporary files and caches
+./scripts/cleanup.sh
+
+# Check what's taking space
+du -sh ./* | sort -hr | head -10
 ```
 
 **Quick setup script (Recommended):**

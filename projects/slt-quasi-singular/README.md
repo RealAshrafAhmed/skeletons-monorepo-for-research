@@ -1,31 +1,36 @@
 # SLT Quasi-Singular Project
 
-This project demonstrates generating and visualizing samples from a standard normal distribution using a Jupyter notebook.
+This project demonstrates Bayesian mixture model fitting using PyMC. It generates synthetic data from normal mixtures and fits posteriors with different sample sizes to study concentration behavior.
 
-## How to Run the Notebook
+## Notebooks Overview
+
+- **`create_dataset.ipynb`** - Generates experiment runs with mixture data at multiple sample sizes
+- **`fit_dataset.ipynb`** - Fits Bayesian posteriors and visualizes concentration across sample sizes
+- **`analyzee_dataset.ipynb`** - Additional analysis of fitted models
+
+## How to Run the Notebooks
 
 1. **Install all dependencies (from the monorepo root):**
    ```bash
-   uv sync --all-packages
+   uv sync --extra dev
    ```
 
 2. **Start Jupyter Lab (from the monorepo root):**
    ```bash
-   uv run jupyter lab
+   ./scripts/lab.sh
    ```
-   Then open `projects/slt-quasi-singular/normal_samples.ipynb` in the Jupyter interface.
+   Then navigate to `projects/slt-quasi-singular/` and open the notebooks in order.
 
-## How to Run the Notebook with Papermill
+## How to Run with Papermill
 
-1. **Install Papermill (if not already):**
-   ```bash
-   uv pip install papermill
-   ```
+**Run notebooks programmatically:**
+```bash
+# Generate new dataset
+uv run papermill projects/slt-quasi-singular/create_dataset.ipynb projects/slt-quasi-singular/create_dataset_output.ipynb
 
-2. **Run the notebook non-interactively:**
-   ```bash
-   uv run papermill projects/slt-quasi-singular/normal_samples.ipynb projects/slt-quasi-singular/normal_samples_output.ipynb
-   ```
+# Fit posteriors to existing data
+uv run papermill projects/slt-quasi-singular/fit_dataset.ipynb projects/slt-quasi-singular/fit_dataset_output.ipynb
+```
 
 
 ## Why Split into Multiple Notebooks?

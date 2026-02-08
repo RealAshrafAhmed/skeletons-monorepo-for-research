@@ -1,7 +1,7 @@
 [project]
-name="skeletons-monorepo-for-research"
+name="python-research-monorepo-template"
 version = "0.1.0"
-description = "Research monorepo for deep learning and SLT projects"
+description = "A production-ready template for managing multiple research projects and shared libraries in a single repository using modern Python tooling"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
