@@ -12,7 +12,8 @@ dependencies = [
     "graphviz>=0.21",
     "nutpie>=0.16.4",
     "numba>=0.63.1",
-    "papermill>=2.6.0"
+    "papermill>=2.6.0",
+    "scipy_extensions"
 ]
 [project.optional-dependencies]
 dev = [

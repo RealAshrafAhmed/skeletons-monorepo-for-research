@@ -3,10 +3,10 @@
 ## Cheatsheet
 
 ```bash
-# Install all dependencies (main + dev)
+# Install all dependencies (main + dev + workspace packages)
 uv sync --extra dev
 
-# Install only main dependencies
+# Install only main dependencies (+ workspace packages)
 uv sync
 
 # Start Jupyter Lab (with auto-kernel registration)
@@ -66,7 +66,11 @@ A production-ready template for managing multiple research projects and shared l
 git clone <this-repo-url> my-research
 cd my-research
 
-# Install all dependencies (main + dev)
+# Complete setup (installs all deps + builds workspace packages)
+./scripts/setup.sh
+
+# OR do it manually:
+# Install all dependencies (main + dev + workspace packages)
 uv sync --extra dev
 
 # Set up pre-commit hooks (optional but recommended)
@@ -102,7 +106,7 @@ uv sync --all-groups
 ### Packages
 
 ```bash
-# Sync workspace packages and dependencies
+# Sync workspace packages and dependencies (do this after adding new packages)
 uv sync --extra dev
 
 # Add a dependency to a specific package
@@ -134,7 +138,7 @@ uv run python -m ipykernel install --user --name=skeletons-monorepo
 uv run papermill input.ipynb output.ipynb -p param_name param_value
 ```
 
-**Note:** The `./scripts/lab.sh` script automatically registers the current environment as a Jupyter kernel before starting Jupyter Lab. Always restart the Jupyter kernel after installing/updating packages.
+**Note:** The `./scripts/lab.sh` script automatically registers the current environment as a Jupyter kernel before starting Jupyter Lab. Always restart the Jupyter kernel after installing/updating packages or syncing workspace packages.
 
 ### Development
 
@@ -219,6 +223,31 @@ uv sync --extra dev
 4. Use packages/ code across multiple projects
 5. Write tests for critical functionality
 6. Use papermill to parameterize and batch-run notebooks
+```
+
+### Troubleshooting
+
+**"ModuleNotFoundError" for workspace packages in notebooks:**
+```bash
+# 1. Ensure workspace packages are built and installed
+uv sync --extra dev
+
+# 2. Restart the Jupyter kernel
+# In Jupyter: Kernel → Restart Kernel
+
+# 3. If still failing, check package __init__.py files exist and export modules
+```
+
+**Workspace packages not updating:**
+```bash
+# Force rebuild of workspace packages
+uv sync --extra dev --reinstall
+```
+
+**Quick setup script (Recommended):**
+```bash
+# One command to set up everything
+./scripts/setup.sh
 ```
 
 ### Adding Experiment Tracking
